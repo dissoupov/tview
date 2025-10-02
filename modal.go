@@ -219,8 +219,55 @@ func (m *Modal) Draw(screen tcell.Screen) {
 	}
 
 	// Set the modal's position and size.
-	height := len(lines) + 6
-	height += len(m.form.items)
+	linesCount := len(lines)
+	itemsCount := len(m.form.items)
+	buttonsCount := len(m.form.buttons)
+
+	// Compute total height of items (support multi-line fields).
+	itemsHeight := 0
+	for _, item := range m.form.items {
+		h := item.GetFieldHeight()
+		if h <= 0 {
+			h = DefaultFormFieldHeight
+		}
+		itemsHeight += h
+	}
+
+	// Buttons occupy a single row if present.
+	buttonsHeight := 0
+	if buttonsCount > 0 {
+		buttonsHeight = 1
+	}
+
+	height := 2 + linesCount + itemsHeight + buttonsHeight
+
+	// Only text is present
+	if linesCount > 0 && buttonsCount == 0 && itemsCount == 0 {
+		height++
+	}
+
+	// Extra space between header text and form content when both exist.
+	if linesCount > 0 && (buttonsCount > 0 || itemsCount > 0) {
+		height++
+	}
+
+	// Account for vertical item padding and spacing before buttons.
+	if itemsCount > 0 && !m.form.horizontal {
+		padding := m.form.itemPadding
+		if padding > 0 {
+			if buttonsCount > 0 {
+				// Include padding after every item, including the last before buttons.
+				height += itemsCount * padding
+			} else if itemsCount > 1 {
+				// Only inter-item padding when there are no buttons.
+				height += (itemsCount - 1) * padding
+			}
+		} else if buttonsCount > 0 {
+			// Ensure at least one empty line between last item and buttons when padding is 0.
+			height++
+		}
+	}
+
 	width += 4
 	x := (screenWidth - width) / 2
 	y := (screenHeight - height) / 2
