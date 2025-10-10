@@ -124,22 +124,20 @@ func (c *TableCell) SetExpansion(expansion int) *TableCell {
 
 // SetTextColor sets the cell's text color.
 func (c *TableCell) SetTextColor(color tcell.Color) *TableCell {
-	if c.Style == tcell.StyleDefault {
-		c.Color = color
-	} else {
+	if c.Style != tcell.StyleDefault {
 		c.Style = c.Style.Foreground(color)
 	}
+	c.Color = color
 	return c
 }
 
 // SetBackgroundColor sets the cell's background color. This will also cause the
 // cell's Transparent flag to be set to "false".
 func (c *TableCell) SetBackgroundColor(color tcell.Color) *TableCell {
-	if c.Style == tcell.StyleDefault {
-		c.BackgroundColor = color
-	} else {
+	if c.Style != tcell.StyleDefault {
 		c.Style = c.Style.Background(color)
 	}
+	c.BackgroundColor = color
 	c.Transparent = false
 	return c
 }
@@ -157,9 +155,8 @@ func (c *TableCell) SetTransparency(transparent bool) *TableCell {
 //
 //	cell.SetAttributes(tcell.AttrItalic | tcell.AttrBold)
 func (c *TableCell) SetAttributes(attr tcell.AttrMask) *TableCell {
-	if c.Style == tcell.StyleDefault {
-		c.Attributes = attr
-	} else {
+	c.Attributes = attr
+	if c.Style != tcell.StyleDefault {
 		c.Style = c.Style.Attributes(attr)
 	}
 	return c
