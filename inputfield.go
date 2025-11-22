@@ -28,6 +28,12 @@ var (
 		return err == nil
 	}
 
+	// InputFieldInteger accepts integers.
+	InputFieldUnsignedInteger = func(text string, ch rune) bool {
+		_, err := strconv.ParseUint(text, 10, 64)
+		return err == nil
+	}
+
 	// InputFieldFloat accepts floating-point numbers.
 	InputFieldFloat = func(text string, ch rune) bool {
 		if text == "-" || text == "." || text == "-." {
