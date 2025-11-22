@@ -120,10 +120,10 @@ func NewDropDown() *DropDown {
 	return d
 }
 
-// SetCurrentOption sets the index of the currently selected option. This may
+// SelectOption sets the index of the currently selected option. This may
 // be a negative value to indicate that no option is currently selected. Calling
 // this function will also trigger the "selected" callback (if there is one).
-func (d *DropDown) SetCurrentOption(index int) *DropDown {
+func (d *DropDown) SelectOption(index int) *DropDown {
 	if index >= 0 && index < len(d.options) {
 		d.currentOption = index
 		d.list.SetCurrentItem(index)
@@ -140,6 +140,20 @@ func (d *DropDown) SetCurrentOption(index int) *DropDown {
 			d.selected("", -1)
 		}
 	}
+	return d
+}
+
+// SelectValue sets the currently selected option.
+// Calling this function will also trigger the "selected" callback (if there is one).
+func (d *DropDown) SelectValue(value string) *DropDown {
+	idx := -1
+	for i, option := range d.options {
+		if option.Text == value {
+			idx = i
+			break
+		}
+	}
+	d.SelectOption(idx)
 	return d
 }
 

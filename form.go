@@ -326,7 +326,7 @@ func (f *Form) AddDropDown(label string, options []string, initialOption int, se
 	dropDown := NewDropDown().
 		SetLabel(label).
 		SetOptions(options, selected).
-		SetCurrentOption(initialOption)
+		SelectOption(initialOption)
 	dropDown.SetFinishedFunc(f.finished)
 	f.items = append(f.items, dropDown)
 	return f
